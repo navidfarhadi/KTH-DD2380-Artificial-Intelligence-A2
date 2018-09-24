@@ -1,0 +1,148 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage[table]{xcolor}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{pgfgantt}
+\usepackage{tikz}
+%\usepackage{pgfplots}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+%\usepackage[ngerman]{datetime}
+
+% Mark the meta information
+\title{Questions for Assignment 2}
+\author{Franz Fuchs \& Navid Farhadi}																
+\date{8 Mai 2015}
+
+% Overwrite the english settings with german 
+\addto\captionsenglish {
+  \renewcommand{\contentsname}{Inhalt}
+}
+%\newdateformat{germanformat}{\THEDAY{. }\monthnamengerman[\THEMONTH], \THEYEAR}
+
+% Set the layout
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+\graphicspath{{../../images/}}
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+
+
+% Mark the headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
+
+% reformat tables
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{N}{@{}m{0pt}@{}}
+
+% Remove the ugly borders around the hyperlinks
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\newenvironment{equationate}{%
+ \itemize
+ \let\orig@item\item
+ \def\item{\orig@item[]\refstepcounter{equation}\def\item{\hfill(\theequation)\orig@item[]\refstepcounter{equation}}}
+}{%
+ \hfill(\theequation)%
+ \enditemize
+}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Cover Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage}
+	\centering
+	\includegraphics[scale = 0.5]{KTH_Logo.jpg}\\[1.0 cm]
+    \textsc{\LARGE KTH Royal Institute of Technology}\\[0.25 cm]
+    \textsc{School of Electrical Engineering and Computer Science}\\[1.0 cm]
+	
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	
+	
+	
+
+	\today\\[0.10 cm]
+	\textsc{Autumn Term 2018}
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Table of contents %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Describe the possible states, initial state, transition function}
+
+Possible states: All possibilities how player A and B could have made their moves (where the crosses and circles are on the 3 $\times$ 3 board)
+
+Initial state: An empty 3 $\times$ 3 board
+
+Transition function: The function that maps each state to a set of states the are achievable after the move of one of the players. (in other words: how will the board look after either player A or player B made a move)
+
+
+\section*{Describe the terminal states of both checkers and tic-tac-toe}
+
+For checkers: terminal states are a set of state which come follow from the
+following situation: one player won (which means that the other player lost).
+A winning state is state where only pieces of the winning player are on the field (between 1 and 12 pieces)
+
+For tic-tac-toe: The game is finished when one player has won or when a tie was reached.
+A player has won if he managed to reach 3 pieces in a row (vertically, diagonally, and horizontally).
+A tie was reached when all fields are filled but no player could reach the goal of having three
+pieces in a row.
+
+\section*{Why is $v(A,s)$ a valid heuristic function for checkers}
+
+The function $v(A,s) = \#(white-checkers) - \#(red-checkers)$ is a valid heuristic
+function because it somehow says how good it is for a player to be a state. The amount
+of red checkers in comparison to the white checkers says how many possible moves a player
+can make. In general, the more moves a player can make the better are its chances of winning
+because the proability for more powerful moves is greater. Therefore, a positive number for player A
+says that it has more checkers on the board, which increases its chances of winning.
+
+\section*{When does $v$ best approximate the utility function, and why}
+
+If $s$ is a winning state, the heuristic function $v(A,s)$ approximates the utility function
+best because then a positive number always leads to a win of player A. (A winning state of player A means that
+only its checkers are on the field which leads to a positive number)
+
+\section*{Can you provide an example of a state $s$ where $v(A,s) > 0$ and B wins in the following turn}
+
+For example, $s$ is a state where two white checkers and one red checker is on the field. If player A enters this state, it will
+be the turn of player B. If the the white checkers are aligned in a row and one free field in between them the red checker
+can jump over the first white checker and subsequently over the other white checker, which means that B has won.
+
+\section*{Will $\eta$ suffer from the same problem (referred to in the last question) as the evaluation function $v$}
+
+No, it will not suffer from this problem. Player A will detect that player B can reach a terminal state
+in which player B wins. Therefore, player A will not choose to make this move as described in the previous
+question.
+
+
+\end{document}
