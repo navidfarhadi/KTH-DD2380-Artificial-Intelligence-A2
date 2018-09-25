@@ -1,6 +1,10 @@
 # MacOS Files
 **/.DS_Store
 
+# C++ Files
+**/a.out
+**/a.out.dSYM
+
 # Compiled class file
 *.class
 
