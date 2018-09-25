@@ -122,24 +122,24 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
      * Here you should write your clever algorithms to get the best next move, ie the best
      * next state. This skeleton returns a random move instead.
      */
-    return lNextStates[rand() % lNextStates.size()];
+    // return lNextStates[rand() % lNextStates.size()];
 
-    // int largest_v = INT_MIN;
-    // int v;
-    // GameState bestNextState;
+    int largest_v = INT_MIN;
+    int v;
+    GameState bestNextState;
 
-    // for(GameState state : lNextStates)
-    // {
-    //     int v = minimaxalphabeta(state,4,0,0,state.getNextPlayer());
-    //     if(v > largest_v)
-    //     {
-    //         largest_v = v;
-    //         bestNextState = state;
-    //     }
+    for(GameState state : lNextStates)
+    {
+        int v = minimaxalphabeta(state,4,0,0,state.getNextPlayer());
+        if(v > largest_v)
+        {
+            largest_v = v;
+            bestNextState = state;
+        }
 
-    // }
+    }
 
-    // return bestNextState;
+    return bestNextState;
 }
 
 /*namespace TICTACTOE*/ }
