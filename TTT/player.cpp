@@ -115,7 +115,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 
     for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],2,0,0,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],3,-1000,1000,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
