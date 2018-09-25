@@ -105,41 +105,25 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
 
 GameState Player::play(const GameState &pState,const Deadline &pDue)
 {
-    //std::cerr << "Processing " << pState.toMessage() << std::endl;
-
     std::vector<GameState> lNextStates;
     pState.findPossibleMoves(lNextStates);
 
-
-
-    // we are already in a terminal state
-    // so we cannot do anything else than
-    // returning what we got
-
     if (lNextStates.size() == 0) return GameState(pState, Move());
 
-    /*
-     * Here you should write your clever algorithms to get the best next move, ie the best
-     * next state. This skeleton returns a random move instead.
-     */
-    // return lNextStates[rand() % lNextStates.size()];
-
     int largest_v = INT_MIN;
-    int v;
-    GameState bestNextState;
+    int index;
 
-    for(GameState state : lNextStates)
+    for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(state,4,0,0,state.getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],2,0,0,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
-            bestNextState = state;
+            index = i;
         }
-
     }
 
-    return bestNextState;
+    return lNextStates[index];
 }
 
 /*namespace TICTACTOE*/ }
