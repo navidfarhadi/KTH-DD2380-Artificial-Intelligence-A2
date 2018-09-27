@@ -45,7 +45,7 @@ int Player::gamma(const GameState &pState)
         }
     }
 
-    return 0;
+    return v;
 }
 
 int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player)
@@ -102,7 +102,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 
     for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],3,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],0,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
