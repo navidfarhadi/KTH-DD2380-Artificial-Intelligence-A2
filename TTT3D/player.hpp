@@ -20,6 +20,7 @@ public:
     GameState play(const GameState &pState, const Deadline &pDue);
     int minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player);
     int evaluate(const GameState &pState, int player);
+    int gamma(const GameState &pState);
 };
 
 /*namespace TICTACTOE3D*/ }
