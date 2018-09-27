@@ -6,7 +6,181 @@
 namespace TICTACTOE3D
 {
 
-int Player::evaluate(const GameState &pState, int player){
+// all tested
+int check_rows(const GameState &pState)
+{
+    int ret = 0;
+    int player = pState.getNextPlayer();
+    for(int i = 0; i < 16; i++){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(i*4 + j)&player > 0){
+                count++;
+            }
+            //std::cerr << (i*4 + j) << " ";
+        }
+        //std::cerr << "\n";
+    }
+    ret *= 10;
+    if(player == CELL_X)    return -ret;
+    else                                    return ret;
+}
+
+int check_cols(const GameState &pState){
+    int ret = 0;
+    int player = pState.getNextPlayer();
+    for(int k = 0; k < 4; k++){
+        for(int i = 0; i < 4; i++){
+            int count = 0;
+            for(int j = 0; j < 4; j++){
+                if(pState.at(i + j * 4 + k*16)&player > 0){
+                    count++;
+                }
+                //std::cerr << (i + j * 4 + k*16) << " ";
+            }
+            //std::cerr << "\n";
+        }
+    }
+    ret *= 10;
+    if(player == CELL_X)    return -ret;
+    else return ret;
+}
+
+int check_lines(const GameState &pState)
+{
+    int ret = 0;
+    int player = pState.getNextPlayer();
+    for(int i = 0; i < 16; i++){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(i + j * 16)&player > 0){
+                count++;
+            }
+            //std::cerr << (i + j * 16) << " ";
+        }
+        //std::cerr << "\n";
+    }
+    ret *= 10;
+    if(player == CELL_X)    return -ret;
+    else return ret;
+}
+
+int check_x_diags(const GameState &pState){
+    int ret = 0;
+    int player = pState.getNextPlayer();
+    // up left to down right
+    for(int i = 0; i < 64; i = i + 16){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(i + j * 5)&player > 0){
+                count++;
+            }
+            //std::cerr << (i + j * 5) << " ";
+        }
+        //std::cerr << "\n";
+    }
+    for(int i = 0; i < 64; i = i + 16){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(12 + i - j * 3)&player > 0){
+                count++;
+            }
+            //std::cerr << (12 + i - j * 3) << " ";
+        }
+        //std::cerr << "\n";
+    }
+    ret *= 10;
+    if(player == CELL_X)    return -ret;
+    else return ret;
+}
+
+int check_y_diags(const GameState &pState){
+    int ret = 0;
+    int player = pState.getNextPlayer();
+    // up left to down right
+    for(int i = 0; i < 4; i++){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(i + j * 20)&player > 0){
+                count++;
+            }
+            //std::cerr << (i + j * 20) << " ";
+        }
+        //std::cerr << "\n";
+    }
+    for(int i = 48; i < 52; i++){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(i - j * 12)&player > 0){
+                count++;
+            }
+            //std::cerr << (i - j * 12) << " ";
+        }
+        //std::cerr << "\n";
+    }
+    ret *= 10;
+    if(player == CELL_X)    return -ret;
+    else return ret;
+}
+
+int check_z_diags(const GameState &pState){
+    int ret = 0;
+    int player = pState.getNextPlayer();
+    // up left to down right
+    for(int i = 0; i < 16; i = i + 4){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            if(pState.at(i + j * 17)&player > 0){
+                count++;
+            }
+            std::cerr << (i + j * 17) << " ";
+        }
+        std::cerr << "\n";
+    }
+    for(int i = 3; i < 16; i = i + 4){
+        int count = 0;
+        for(int j = 0; j < 4; j++){
+            /*if(pState.at(i + j * 9)&player > 0){
+                count++;
+            }*/
+            std::cerr << (i + j * 15) << " ";
+        }
+        std::cerr << "\n";
+    }
+    ret *= 10;
+    if(player == CELL_X)    return -ret;
+    else return ret;
+}
+
+int check_main_diag(const GameState &pState)
+{   
+    int offset = 0;
+    for(int i = 0; i < 4; i++){
+        std::cerr << (offset + i*21) << " ";
+    }
+    std::cerr << "\n";
+
+    offset = 12;
+    for(int i = 0; i < 4; i++){
+        std::cerr << (offset + i*13) << " ";
+    }
+    std::cerr << "\n";
+
+    offset = 3;
+    for(int i = 0; i < 4; i++){
+        std::cerr << (offset + i*19) << " ";
+    }
+    std::cerr << "\n";
+
+    offset = 15;
+    for(int i = 0; i < 4; i++){
+        std::cerr << (offset + i*11) << " ";
+    }
+    std::cerr << "\n";
+    return 0;
+}
+
+int Player::evaluate(const GameState &pState){
     if(pState.isOWin()){
         return 100000;
     }
@@ -14,13 +188,17 @@ int Player::evaluate(const GameState &pState, int player){
         return -10000;
     }
     else{
-        return 0;
+        int ret = 0;
+        ret =  check_main_diag(pState) ;//+ check_rows(pState) + check_depth(pState);
+        return ret;
     }
 }
 
 int Player::gamma(const GameState &pState)
 {
     int v = 0;
+
+    evaluate(pState);
 
     if(pState.getNextPlayer() == CELL_X)
     {
@@ -100,7 +278,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 
     for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],1,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],0,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
