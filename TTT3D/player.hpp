@@ -18,6 +18,7 @@ public:
     ///\param pDue time before which we must have returned
     ///\return the next state the board is in after our move
     GameState play(const GameState &pState, const Deadline &pDue);
+    int minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player);
 };
 
 /*namespace TICTACTOE3D*/ }
