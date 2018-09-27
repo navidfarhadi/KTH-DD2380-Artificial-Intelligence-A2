@@ -53,7 +53,7 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
         v = INT_MIN;
         for(GameState child : nextStates)
         {
-            v = minimaxalphabeta(child,depth-1,alpha,beta,CELL_O);
+            v = std::max(v,minimaxalphabeta(child,depth-1,alpha,beta,CELL_O));
             alpha = std::max(alpha,v);
             if(beta <= alpha)
             {
@@ -66,7 +66,7 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
         v = INT_MAX;
         for(GameState child : nextStates)
         {
-            v = minimaxalphabeta(child,depth-1,alpha,beta,CELL_X);
+            v = std::min(v,minimaxalphabeta(child,depth-1,alpha,beta,CELL_X));
             beta = std::min(beta,v);
             if(beta <= alpha)
             {
