@@ -51,16 +51,14 @@ int Player::gamma(const GameState &pState)
 int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player)
 {
     int v;
+    std::vector<GameState> nextStates;
+    pState.findPossibleMoves(nextStates);
 
     if(depth == 0 || pState.isEOG())
     {
         v = gamma(pState);
     }
-
-    std::vector<GameState> nextStates;
-    pState.findPossibleMoves(nextStates);
-
-    if(player == CELL_X)
+    else if(player == CELL_X)
     {
         v = INT_MIN;
         for(GameState child : nextStates)
@@ -102,7 +100,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 
     for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],0,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],1,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
