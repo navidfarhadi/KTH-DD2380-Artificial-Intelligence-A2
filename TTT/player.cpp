@@ -6,47 +6,47 @@
 namespace TICTACTOE
 {
 
-/**
- * evaluates a certain state
- * returns a value that says how
- * good a state is for a player
- */
-int evaluate(const GameState &pState)
+int Player::gamma(const GameState &pState)
 {
-    return -1;
+    int v = 0;
+
+    if(pState.getNextPlayer() == CELL_X)
+    {
+        if(pState.isXWin())
+        {
+            v = 1;
+        }
+        else
+        {
+            v = 0;
+        }
+    }
+    else
+    {
+        if(pState.isOWin())
+        {
+            v = -1;
+        }
+        else
+        {
+            v = 0;
+        }
+    }
+
+    return 0;
 }
 
 int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player)
 {
-    if(depth == 0 && pState.isEOG())
+    int v;
+
+    if(depth == 0 || pState.isEOG())
     {
-        if(pState.getNextPlayer() == CELL_X)
-        {
-            if(pState.isXWin())
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            if(pState.isOWin())
-            {
-                return -1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        v = gamma(pState);
     }
 
     std::vector<GameState> nextStates;
     pState.findPossibleMoves(nextStates);
-    int v;
 
     if(player == CELL_X)
     {
