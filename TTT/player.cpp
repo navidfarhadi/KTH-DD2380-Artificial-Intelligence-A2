@@ -6,11 +6,11 @@
 namespace TICTACTOE
 {
 
-int Player::gamma(const GameState &pState)
+int Player::gamma(const GameState &pState, int player)
 {
     int v = 0;
 
-    if(pState.getNextPlayer() == CELL_X)
+    if(player == CELL_O)
     {
         if(pState.isXWin())
         {
@@ -44,7 +44,7 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
 
     if(depth == 0 || pState.isEOG())
     {
-        v = gamma(pState);
+        v = gamma(pState, player);
     }
     else if(player == CELL_X)
     {
@@ -88,7 +88,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 
     for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],3,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],4,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
