@@ -1,13 +1,15 @@
 CC = g++-7
+OUT_FILE = a.out
 
 uname_S=$(shell sh -c 'uname -s 2>/dev/null || echo not')
 
 ifeq ($(uname_S),Linux)
 	CC = g++
+	OUT_FILE = TTT
 endif
 
 all:
-	$(CC) *.cpp -g -O2 -Wall -o TTT -std=gnu++14
+	$(CC) *.cpp -g -O2 -Wall -o $(OUT_FILE) -std=gnu++14
 
 clean:
-	rm TTT
+	rm $(OUT_FILE) output.txt

@@ -14,16 +14,19 @@ int check_rows(const GameState &pState)
     for(int i = 0; i < 16; i++){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(i*4 + j)&player > 0){
+            if(pState.at(i*4 + j)&player){
                 count++;
             }
             //std::cerr << (i*4 + j) << " ";
         }
         //std::cerr << "\n";
+        if(count >= 2){
+                ret += count * 100;
+        }
     }
-    ret *= 10;
+    
     if(player == CELL_X)    return -ret;
-    else                                    return ret;
+    else                    return ret;
 }
 
 int check_cols(const GameState &pState){
@@ -33,15 +36,17 @@ int check_cols(const GameState &pState){
         for(int i = 0; i < 4; i++){
             int count = 0;
             for(int j = 0; j < 4; j++){
-                if(pState.at(i + j * 4 + k*16)&player > 0){
+                if(pState.at(i + j * 4 + k*16)&player){
                     count++;
                 }
                 //std::cerr << (i + j * 4 + k*16) << " ";
             }
+            if(count >= 2){
+                ret += count * 100;
+            }
             //std::cerr << "\n";
         }
     }
-    ret *= 10;
     if(player == CELL_X)    return -ret;
     else return ret;
 }
@@ -53,14 +58,16 @@ int check_lines(const GameState &pState)
     for(int i = 0; i < 16; i++){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(i + j * 16)&player > 0){
+            if(pState.at(i + j * 16)&player){
                 count++;
             }
             //std::cerr << (i + j * 16) << " ";
         }
         //std::cerr << "\n";
+        if(count >= 2){
+            ret += count * 100;
+        }
     }
-    ret *= 10;
     if(player == CELL_X)    return -ret;
     else return ret;
 }
@@ -72,24 +79,29 @@ int check_x_diags(const GameState &pState){
     for(int i = 0; i < 64; i = i + 16){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(i + j * 5)&player > 0){
+            if(pState.at(i + j * 5)&player){
                 count++;
             }
             //std::cerr << (i + j * 5) << " ";
         }
         //std::cerr << "\n";
+        if(count >= 2){
+                ret += count * 1000;
+        }
     }
     for(int i = 0; i < 64; i = i + 16){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(12 + i - j * 3)&player > 0){
+            if(pState.at(12 + i - j * 3)&player){
                 count++;
             }
             //std::cerr << (12 + i - j * 3) << " ";
         }
         //std::cerr << "\n";
+        if(count >= 2){
+            ret += count * 1000;
+        }
     }
-    ret *= 10;
     if(player == CELL_X)    return -ret;
     else return ret;
 }
@@ -101,24 +113,29 @@ int check_y_diags(const GameState &pState){
     for(int i = 0; i < 4; i++){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(i + j * 20)&player > 0){
+            if(pState.at(i + j * 20)&player){
                 count++;
             }
             //std::cerr << (i + j * 20) << " ";
         }
         //std::cerr << "\n";
+        if(count >= 2){
+            ret += count * 1000;
+        }
     }
     for(int i = 48; i < 52; i++){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(i - j * 12)&player > 0){
+            if(pState.at(i - j * 12)&player){
                 count++;
             }
             //std::cerr << (i - j * 12) << " ";
         }
         //std::cerr << "\n";
+        if(count >= 2){
+            ret += count * 1000;
+        }
     }
-    ret *= 10;
     if(player == CELL_X)    return -ret;
     else return ret;
 }
@@ -130,24 +147,29 @@ int check_z_diags(const GameState &pState){
     for(int i = 0; i < 16; i = i + 4){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            if(pState.at(i + j * 17)&player > 0){
+            if(pState.at(i + j * 17)&player){
                 count++;
             }
-            std::cerr << (i + j * 17) << " ";
+            //std::cerr << (i + j * 17) << " ";
         }
-        std::cerr << "\n";
+        //std::cerr << "\n";
+        if(count >= 2){
+            ret += count * 1000;
+        }
     }
     for(int i = 3; i < 16; i = i + 4){
         int count = 0;
         for(int j = 0; j < 4; j++){
-            /*if(pState.at(i + j * 9)&player > 0){
+            if(pState.at(i + j * 15)&player){
                 count++;
-            }*/
-            std::cerr << (i + j * 15) << " ";
+            }
+            //std::cerr << (i + j * 15) << " ";
         }
-        std::cerr << "\n";
+        //std::cerr << "\n";
+        if(count >= 2){
+                ret += count * 1009;
+        }
     }
-    ret *= 10;
     if(player == CELL_X)    return -ret;
     else return ret;
 }
@@ -155,29 +177,60 @@ int check_z_diags(const GameState &pState){
 int check_main_diag(const GameState &pState)
 {   
     int offset = 0;
+    int count = 0;
+    int player = pState.getNextPlayer();
+    int ret = 0;
     for(int i = 0; i < 4; i++){
-        std::cerr << (offset + i*21) << " ";
+        if(pState.at(offset + i*21)&player){
+            count++;
+        }
+        //std::cerr << (offset + i*21) << " ";
     }
-    std::cerr << "\n";
+    //std::cerr << "\n";
+    if(count >= 2){
+        ret += 10000;
+    }
 
     offset = 12;
+    count = 0;
     for(int i = 0; i < 4; i++){
-        std::cerr << (offset + i*13) << " ";
+        //std::cerr << (offset + i*13) << " ";
+        if(pState.at(offset + i*13)&player){
+            count++;
+        }
     }
-    std::cerr << "\n";
+    if(count >= 2){
+        ret += 10000;
+    }
+    //std::cerr << "\n";
 
     offset = 3;
+    count = 0;
     for(int i = 0; i < 4; i++){
-        std::cerr << (offset + i*19) << " ";
+        if(pState.at(offset + i*19)&player){
+            count++;
+        }
+        //std::cerr << (offset + i*19) << " ";
     }
-    std::cerr << "\n";
+    if(count >= 2){
+        ret += 10000;
+    }
+    //std::cerr << "\n";
 
     offset = 15;
+    count = 0;
     for(int i = 0; i < 4; i++){
-        std::cerr << (offset + i*11) << " ";
+        //std::cerr << (offset + i*11) << " ";
+        if(pState.at(offset + i*11)&player){
+            count++;
+        }
     }
-    std::cerr << "\n";
-    return 0;
+    //std::cerr << "\n";
+    if(count >= 2){
+        ret += 10000;
+    }
+    if(player == CELL_X)    return ret;
+    else                    return (-ret);
 }
 
 int Player::evaluate(const GameState &pState){
@@ -188,17 +241,16 @@ int Player::evaluate(const GameState &pState){
         return -10000;
     }
     else{
-        int ret = 0;
-        ret =  check_main_diag(pState) ;//+ check_rows(pState) + check_depth(pState);
+        int ret = check_cols(pState) + check_rows(pState) + check_lines(pState) + check_main_diag(pState) + check_x_diags(pState) + check_y_diags(pState) + check_z_diags(pState);
+        //std::cerr << "No one is winning - score: " << ret << "\n";
         return ret;
     }
 }
 
+// deprecated
 int Player::gamma(const GameState &pState)
 {
     int v = 0;
-
-    evaluate(pState);
 
     if(pState.getNextPlayer() == CELL_X)
     {
@@ -232,9 +284,11 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
     std::vector<GameState> nextStates;
     pState.findPossibleMoves(nextStates);
 
+    //std::cerr << "Depth: " << depth << "\n";
+
     if(depth == 0 || pState.isEOG())
     {
-        v = gamma(pState);
+        v = evaluate(pState);
     }
     else if(player == CELL_X)
     {
@@ -276,9 +330,9 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
     int largest_v = INT_MIN;
     int index;
 
-    for(int i = 0; i < lNextStates.size(); i++)
+    for(long unsigned int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],0,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],1,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
