@@ -109,8 +109,6 @@ int Player::winMatrix[76][4] =
     {3,18,33,48}
 };
 
-int Player::rewardBase = 10;
-
 int Player::rewardMatrix[5][5] = 
 {
     {0,-10,-100,-1000,-10000},
