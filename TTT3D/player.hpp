@@ -19,8 +19,10 @@ public:
     ///\return the next state the board is in after our move
     GameState play(const GameState &pState, const Deadline &pDue);
     int minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player);
-    int evaluate(const GameState &pState);
-    int gamma(const GameState &pState);
+    int gamma(const GameState &pState, int player);
+    static int winMatrix[76][4];
+    static int rewardMatrix[5][5];
+    int evaluate(const GameState &pState, int player);
 };
 
 /*namespace TICTACTOE3D*/ }
