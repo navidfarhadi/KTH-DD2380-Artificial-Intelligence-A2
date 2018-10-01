@@ -151,6 +151,12 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
     std::vector<GameState> nextStates;
     pState.findPossibleMoves(nextStates);
 
+    v = evaluate(pState,player);
+
+    if(v >1000){
+        return v;
+    }
+
     if(depth == 0 || pState.isEOG())
     {
         v = evaluate(pState, player);
@@ -198,7 +204,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 
     for(int i = 0; i < lNextStates.size(); i++)
     {
-        int v = minimaxalphabeta(lNextStates[i],0,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
+        int v = minimaxalphabeta(lNextStates[i],1,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
         if(v > largest_v)
         {
             largest_v = v;
