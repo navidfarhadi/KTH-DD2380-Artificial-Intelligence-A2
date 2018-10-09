@@ -20,8 +20,6 @@ public:
     int minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player);
     int evaluate(const GameState &pState, int player);
     GameState play(const GameState &pState, const Deadline &pDue);
-    int minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player);
-    int evaluate(const GameState &pState, int player);
     static int color;
 };
 

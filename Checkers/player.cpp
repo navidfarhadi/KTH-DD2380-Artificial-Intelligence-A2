@@ -1,15 +1,10 @@
 #include "player.hpp"
 #include <cstdlib>
-<<<<<<< HEAD
-=======
-#include <iostream>
->>>>>>> cbe5c286d662e0bf530bd0ab616db9943693bf07
 #include <climits>
 
 namespace checkers
 {
 
-<<<<<<< HEAD
 int Player::evaluate(const GameState &pState, int player)
 {
     int total = 0;
@@ -207,44 +202,10 @@ int Player::evaluate(const GameState &pState, int player)
         else
         {
             return total + whiteTotal - redTotal;
-=======
-int Player::evaluate(const GameState &pState, int player){
-    int count_red = 0;
-    int count_white = 0;
-    for(int i = 0; i < 32; i++){
-        if(pState.at(i) == CELL_RED) count_red++;
-        if(pState.at(i) == CELL_WHITE) count_white++;
-    }
-    return (count_red - count_white);
-}
-
-int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player)
-{
-    int v;
-    std::vector<GameState> nextStates;
-    pState.findPossibleMoves(nextStates);
-
-    if(depth == 0 || pState.isEOG())
-    {
-        v = evaluate(pState, player);
-    }
-    else if(player == CELL_INVALID)
-    {
-        v = INT_MIN;
-        for(GameState child : nextStates)
-        {
-            v = std::max(v,minimaxalphabeta(child,depth-1,alpha,beta,CELL_INVALID));
-            alpha = std::max(alpha,v);
-            if(beta <= alpha)
-            {
-                break;
-            }
->>>>>>> cbe5c286d662e0bf530bd0ab616db9943693bf07
         }
     }
     else
     {
-<<<<<<< HEAD
         if(player == CELL_RED && pState.isRedWin())
         {
             return 5000;
@@ -269,25 +230,6 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
 }
 
 int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player)
-=======
-        v = INT_MAX;
-        for(GameState child : nextStates)
-        {
-            v = std::min(v,minimaxalphabeta(child,depth-1,alpha,beta,CELL_INVALID));
-            beta = std::min(beta,v);
-            if(beta <= alpha)
-            {
-                break;
-            }
-        }
-    }
-
-    return v;
-}
-
-
-GameState Player::play(const GameState &pState,const Deadline &pDue)
->>>>>>> cbe5c286d662e0bf530bd0ab616db9943693bf07
 {
     int v;
     std::vector<GameState> nextStates;
@@ -352,24 +294,6 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
         }
     }
 
-<<<<<<< HEAD
-    int largest_v = INT_MIN;
-    int index;
-    color = pState.getNextPlayer();
-
-    for(int i = 0; i < lNextStates.size(); i++)
-    {
-        int v = minimaxalphabeta(lNextStates[i],8,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
-        int t = lNextStates[i].getNextPlayer();
-        if(v > largest_v)
-        {
-            largest_v = v;
-            index = i;
-        }
-    }
-
-=======
->>>>>>> cbe5c286d662e0bf530bd0ab616db9943693bf07
     return lNextStates[index];
 }
 
