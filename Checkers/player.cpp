@@ -1,252 +1,86 @@
 #include "player.hpp"
 #include <cstdlib>
+#include <iostream>
 #include <climits>
 
 namespace checkers
 {
 
-int Player::evaluate(const GameState &pState, int player)
+class FastExit {};
+
+static int evaluate(const GameState &pState, int player)
 {
-    int total = 0;
-    int redTotal = 0;
-    int whiteTotal = 0;
+    int score = 0;
+    
+    if(pState.isEOG()) {
+        if(pState.isDraw()) return -5000;
+        if(pState.isWhiteWin() && player == CELL_WHITE) return 10000;
+        if(pState.isWhiteWin() && player == CELL_RED) return -10000;
+        if(pState.isRedWin() && player == CELL_WHITE) return -10000;
+        if(pState.isRedWin() && player == CELL_RED) return 10000;
+    }
+    
+    for (int i = 0; i < 32; i++) {
+        uint8_t cell = pState.at(i);
+        int val = -1;
+        
+        if(cell == CELL_EMPTY) val = 0;
+        if(cell & CELL_INVALID) val = 0;
+        if(cell & player) val *= -1;
+        if(cell & CELL_KING) val *= 3;
+        
+        score += val;
+    }
 
-    if(!pState.isEOG())
-    {
-        for(int i = 0; i < pState.cSquares; i++)
-        {
-            if(pState.at(i) == CELL_WHITE)
-            {
-                whiteTotal += 20;
+    //close to get a king
+    for(int i = 0; i < 32; i++){
+        uint8_t cell = pState.at(i);
+        // this does not hold us back
+        if(cell & CELL_KING) break;
 
-                if(player == CELL_WHITE)
-                {
-                    if(pState.cellToCol(i) == 0)
-                    {
-                        total += 10;
-                    }
-                    else if(pState.cellToRow(i) == 0)
-                    {
-                        total += 10;
-                    }
-                    else if(pState.cellToCol(i) == 1)
-                    {
-                        total += 5;
-                    }
-                    else if(pState.cellToCol(i) == 6)
-                    {
-                        total += 5;
-                    }
-                    else if(pState.cellToCol(i) == 7)
-                    {
-                        total += 10;
-                    }
-                    else if(pState.cellToRow(i) == 7)
-                    {
-                        total += 10;
-                    }
-                }
-                else if(player == CELL_RED)
-                {
-                    if(pState.cellToCol(i) == 0)
-                    {
-                        total -= 10;
-                    }
-                    else if(pState.cellToRow(i) == 0)
-                    {
-                        total -= 10;
-                    }
-                    else if(pState.cellToCol(i) == 1)
-                    {
-                        total -= 5;
-                    }
-                    else if(pState.cellToCol(i) == 6)
-                    {
-                        total -= 5;
-                    }
-                    else if(pState.cellToCol(i) == 7)
-                    {
-                        total -= 10;
-                    }
-                    else if(pState.cellToRow(i) == 7)
-                    {
-                        total -= 10;
-                    }
-                }
-
-                if(pState.at(i) == CELL_KING)
-                {
-                    whiteTotal += 150;
-                }
-                else
-                {
-                    if(player == CELL_WHITE)
-                    {
-                        if(pState.cellToRow(i) == 1)
-                        {
-                            total += 5;
-                        }
-                        else if(pState.cellToRow(i) == 2)
-                        {
-                            total += 5;
-                        }
-                    }
-                    else if(player == CELL_RED)
-                    {
-                        if(pState.cellToRow(i) == 1)
-                        {
-                            total -= 5;
-                        }
-                        else if(pState.cellToRow(i) == 2)
-                        {
-                            total -= 5;
-                        }
-                    }
-                }
+        if(cell & CELL_RED && pState.cellToRow(i) == 6){
+            if(player == CELL_RED){
+                score += 2;
             }
-            else if(pState.at(i) == CELL_RED)
-            {
-                redTotal += 20;
-
-                if(player == CELL_RED)
-                {
-                    if(pState.cellToCol(i) == 0)
-                    {
-                        total += 10;
-                    }
-                    else if(pState.cellToRow(i) == 0)
-                    {
-                        total += 10;
-                    }
-                    else if(pState.cellToCol(i) == 1)
-                    {
-                        total += 5;
-                    }
-                    else if(pState.cellToCol(i) == 6)
-                    {
-                        total += 5;
-                    }
-                    else if(pState.cellToCol(i) == 7)
-                    {
-                        total += 10;
-                    }
-                    else if(pState.cellToRow(i) == 7)
-                    {
-                        total += 10;
-                    }
-                }
-                else if(player == CELL_WHITE)
-                {
-                    if(pState.cellToCol(i) == 0)
-                    {
-                        total -= 10;
-                    }
-                    else if(pState.cellToRow(i) == 0)
-                    {
-                        total -= 10;
-                    }
-                    else if(pState.cellToCol(i) == 1)
-                    {
-                        total -= 5;
-                    }
-                    else if(pState.cellToCol(i) == 6)
-                    {
-                        total -= 5;
-                    }
-                    else if(pState.cellToCol(i) == 7)
-                    {
-                        total -= 10;
-                    }
-                    else if(pState.cellToRow(i) == 7)
-                    {
-                        total -= 10;
-                    }
-                }
-
-                if(pState.at(i) == CELL_KING)
-                {
-                    redTotal += 150;
-                }
-                else
-                {
-                    if(player == CELL_RED)
-                    {
-                        if(pState.cellToRow(i) == 6)
-                        {
-                            total += 5;
-                        }
-                        else if(pState.cellToRow(i) == 5)
-                        {
-                            total += 5;
-                        }
-                    }
-                    else if(player == CELL_WHITE)
-                    {
-                        if(pState.cellToRow(i) == 6)
-                        {
-                            total -= 5;
-                        }
-                        else if(pState.cellToRow(i) == 5)
-                        {
-                            total -= 5;
-                        }
-                    }
-                }
+            else{
+                score -= 2;
             }
         }
-
-        if(player == CELL_RED)
-        {
-            return total + redTotal - whiteTotal;
-        }
-        else
-        {
-            return total + whiteTotal - redTotal;
-        }
-    }
-    else
-    {
-        if(player == CELL_RED && pState.isRedWin())
-        {
-            return 5000;
-        }
-        else if (player == CELL_WHITE && pState.isWhiteWin())
-        {
-            return 5000;
-        }
-        else if (player == CELL_RED && pState.isWhiteWin())
-        {
-            return -5000;
-        }
-        else if (player == CELL_WHITE && pState.isRedWin())
-        {
-            return -5000;
-        }
-        else
-        {
-            return 0;
+        else if(cell & CELL_WHITE && pState.cellToRow(i) == 1){
+            if(player == CELL_WHITE){
+                score += 2;
+            }
+            else{
+                score -= 2;
+            }
         }
     }
+    
+    return score;
 }
 
-int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player)
+static std::pair<int, bool> minimaxalphabeta(const GameState &pState, int depth, int alpha, int beta, int player, bool maximizingPlayer, const Deadline &pDue)
 {
+    if(pDue - Deadline::now() < 0.02) throw FastExit();
+    
     int v;
     std::vector<GameState> nextStates;
     pState.findPossibleMoves(nextStates);
 
     if(depth == 0 || pState.isEOG())
     {
-        v = evaluate(pState, color);
-
-        if(v > 500) return v;
+        return {evaluate(pState, player), !pState.isEOG()};
     }
-    else if(player == CELL_RED)
+    
+    bool remainingChildren = false;
+    if(maximizingPlayer)
     {
         v = INT_MIN;
         for(GameState child : nextStates)
         {
-            v = std::max(v,minimaxalphabeta(child,depth-1,alpha,beta,CELL_WHITE));
+            auto res = minimaxalphabeta(child,depth-1,alpha,beta,player, false, pDue);
+            if(res.second) remainingChildren = true;
+            v = std::max(v, res.first);
             alpha = std::max(alpha,v);
             if(beta <= alpha)
             {
@@ -254,12 +88,14 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
             }
         }
     }
-    else if(player == CELL_WHITE)
+    else
     {
         v = INT_MAX;
         for(GameState child : nextStates)
         {
-            v = std::min(v,minimaxalphabeta(child,depth-1,alpha,beta,CELL_RED));
+            auto res = minimaxalphabeta(child,depth-1,alpha,beta,player, true, pDue);
+            if(res.second) remainingChildren = true;
+            v = std::min(v, res.first);
             beta = std::min(beta,v);
             if(beta <= alpha)
             {
@@ -268,32 +104,70 @@ int Player::minimaxalphabeta(const GameState &pState, int depth, int alpha, int 
         }
     }
 
-    return v;
+    return {v, remainingChildren};
 }
 
-int Player::color;
 
 GameState Player::play(const GameState &pState,const Deadline &pDue)
 {
+    //std::cerr << "Processing " << pState.toMessage() << std::endl;
+
     std::vector<GameState> lNextStates;
     pState.findPossibleMoves(lNextStates);
 
     if (lNextStates.size() == 0) return GameState(pState, Move());
     
 
-    int largest_v = INT_MIN;
-    int index = -1;
+    int depth = 5;
+    int index = 0;
+    int largest_v = 0;
+    
+    while(true) {
+        
+        Deadline start(Deadline::now());
+    
+        int largest_v_loop = INT_MIN;
+        int index_loop = -1;
+        bool remainingChildren = false;
 
-    for(long unsigned int i = 0; i < lNextStates.size(); i++)
-    {
-        int v = minimaxalphabeta(lNextStates[i],6,INT_MIN,INT_MAX,lNextStates[i].getNextPlayer());
-        if(v > largest_v)
-        {
-            largest_v = v;
-            index = i;
+        try {
+            for(long unsigned int i = 0; i < lNextStates.size(); i++)
+            {
+                auto res = minimaxalphabeta(lNextStates[i],depth,INT_MIN,INT_MAX,pState.getNextPlayer(), false, pDue);
+                int v = res.first;
+                if(res.second) remainingChildren = true;
+                if(v > largest_v_loop)
+                {
+                    largest_v_loop = v;
+                    index_loop = i;
+                }
+            }
+        
+            depth++;
+            
+            largest_v = largest_v_loop;
+            index = index_loop;
+            
+            if(!remainingChildren) break;
+
+            if(largest_v == 10000){
+                // we found what we needed to find
+                break;
+            }
+            
+            //double searchtime = Deadline::now() - start;
+            //double lefttime = pDue - Deadline::now();
+            
+            //std::cerr << "Depth " << depth << ", search " << searchtime << ", left " << lefttime << std::endl;
+            //if(lefttime < searchtime * 1.5) break;
+        } catch(const FastExit &) {
+            //std::cerr << "Depth " << depth + 1 << " fast exit" << std::endl;
+            break;
         }
     }
 
+    std::cerr << "Picking move with value " << largest_v << " using depth " << depth << std::endl;
+    
     return lNextStates[index];
 }
 
